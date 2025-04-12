@@ -1,3 +1,5 @@
 netsecenv
 .env
 .conda
+venv
+.env
