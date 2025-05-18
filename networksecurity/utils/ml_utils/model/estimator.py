@@ -18,6 +18,8 @@ class NetworkModel:
         try:
             x_transform = self.preprocessor.transform(x)
             y_hat = self.model.predict(x_transform)
+            # Convert prediction to integers for consistent display
+            y_hat = y_hat.astype(int)
             return y_hat
         except Exception as e:
             raise NetworkSecurityException(e,sys)

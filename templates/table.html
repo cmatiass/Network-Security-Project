@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Security Analysis</title>
+    <title>Prediction Results - Network Security Analysis</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
@@ -13,111 +13,251 @@
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
+            background-color: #0a192f;
+            color: #e6f1ff;
             padding-top: 60px;
         }
         .navbar {
-            background-color: #343a40;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: #112240;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
         .navbar-brand {
             font-weight: 600;
-            color: #ffffff;
+            color: #64ffda;
         }
         .card {
+            background-color: #112240;
+            border: 1px solid #233554;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
             margin-bottom: 20px;
-        }
-        .card-header {
-            background-color: #4a6fdc;
-            color: white;
-            font-weight: 500;
+        }        .card-header {
+            background-color: #1d304d;
+            color: #64ffda;
+            font-weight: 600;
+            border-bottom: 1px solid #233554;
             border-radius: 10px 10px 0 0 !important;
             padding: 15px 20px;
         }
         .table {
             margin-bottom: 0;
+            color: #e6f1ff;
         }
         .table thead th {
-            background-color: #f1f3f9;
-            border-color: #dee2e6;
+            background-color: #233554;
+            border-color: #0a192f;
+            color: #64ffda;
             font-weight: 500;
         }
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0, 0, 0, 0.02);
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #1d304d;
+        }
+        .table-striped > tbody > tr:nth-of-type(even) {
+            background-color: #112240;
         }
         .footer {
-            background-color: #343a40;
-            color: #ffffff;
-            padding: 15px 0;
+            background-color: #112240;
+            color: #8892b0;
+            padding: 30px 0;
             text-align: center;
-            margin-top: 30px;
+            margin-top: 60px;
+        }
+        .btn-primary {
+            background-color: #64ffda;
+            border-color: #64ffda;
+            color: #0a192f;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: transparent;
+            color: #64ffda;
+            border-color: #64ffda;
+        }
+        .cyber-pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiPjwvcmVjdD4KPC9zdmc+');
+            z-index: -1;
+        }
+        .result-summary {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #1d304d;
+            border-radius: 10px;
+            border-left: 4px solid #64ffda;
+        }
+        .threat-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .threat-safe {
+            background-color: #5cb85c;
+        }
+        .threat-warning {
+            background-color: #f0ad4e;
+        }
+        .threat-danger {
+            background-color: #d9534f;
         }
     </style>
 </head>
-<body>
-    <!-- Navigation Bar -->
+<body>    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-shield-alt me-2"></i>Network Security Analysis</a>
+            <a class="navbar-brand" href="/"><i class="fas fa-shield-alt me-2"></i>Network Security Analysis</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/train"><i class="fas fa-cogs me-1"></i>Train Model</a>
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/train-model">Train Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/prediction">Make Prediction</a>
                     </li>
                 </ul>
             </div>
         </div>
-    </nav>
-
+    </nav>    <div class="cyber-pattern"></div>
+    
     <!-- Main Content -->
-    <div class="container mt-4">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-table me-2"></i>Predicted Data Results</h5>
-                        <a href="/prediction_output/output.csv" class="btn btn-sm btn-light" download><i class="fas fa-download me-1"></i>Download CSV</a>
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-responsive">
-                            {{ table | safe }}
+    <div class="container mt-5 pt-4">
+        <div class="row mb-4">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="text-light mb-4">Network Security Analysis Results</h2>
+                <p class="text-light opacity-75">
+                    The prediction model has analyzed your network data and identified potential security threats.
+                    Below are the detailed results of the analysis.
+                </p>
+            </div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col-lg-10 mx-auto">
+                <div class="result-summary">
+                    <h5 class="text-light mb-3"><i class="fas fa-chart-pie me-2"></i>Analysis Summary</h5>                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">                                <span class="threat-indicator threat-safe"></span>
+                                <span>Safe Entries (1): <strong id="safeCount">{{ safe_count if safe_count is defined else 0 }}</strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="threat-indicator threat-danger"></span>
+                                <span>Malicious Entries (0): <strong id="dangerCount">{{ malicious_count if malicious_count is defined else 0 }}</strong></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-center">
+                                <span>Total Analyzed: <strong id="totalCount">{{ total_count if total_count is defined else 0 }}</strong></span>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="fas fa-table me-2"></i>Detailed Prediction Results</h5>
+                        <div>
+                            <a href="/prediction_output/output.csv" class="btn btn-sm btn-outline-primary" download><i class="fas fa-download me-1"></i>Download CSV</a>
+                            <a href="/prediction" class="btn btn-sm btn-primary ms-2"><i class="fas fa-redo me-1"></i>New Prediction</a>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            {{ table | safe }}
+                        </div>
+                    </div>                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer mt-auto">
+    <!-- Footer -->    <footer class="footer">
         <div class="container">
-            <span>&copy; Network Security Project | MLOPS</span>
-            <span class="ms-3">
-                <a href="https://github.com/cmatiass" target="_blank" class="text-light">
-                    <i class="fab fa-github me-1"></i>GitHub
-                </a>
-            </span>
+            <div class="row">
+                <div class="col-md-6">
+                    <p>© Network Security Project | All Rights Reserved</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="https://github.com/cmatiass" target="_blank" class="text-light me-3">
+                        <i class="fab fa-github me-1"></i>GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/carlosmatiassaez/" target="_blank" class="text-light">
+                        <i class="fab fa-linkedin me-1"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Apply Bootstrap classes to the dynamically generated table
         document.addEventListener('DOMContentLoaded', function() {
             const table = document.querySelector('table');
             if (table) {
+                // Apply Bootstrap classes to the table
                 table.classList.add('table', 'table-striped', 'table-hover', 'table-bordered');
                 
                 // Find the thead if it exists
                 const thead = table.querySelector('thead');
                 if (thead) {
-                    thead.classList.add('table-light');
+                    thead.classList.add('text-light');
+                }
+                
+                // Get all rows to count safe and malicious entries
+                const rows = table.querySelectorAll('tbody tr');
+                let safeCount = 0;
+                let dangerCount = 0;                // Check for predicted_column value in each row
+                rows.forEach(row => {
+                    // Find predicted column (last column)
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        const lastCell = cells[cells.length - 1];
+                        const value = lastCell.textContent.trim();
+                        
+                        // Highlight the row based on prediction - account for both integer and float values
+                        if (value === '1' || value === '1.0') {
+                            dangerCount++;
+                            row.classList.add('table-danger');
+                            lastCell.innerHTML = '<span class="badge bg-danger">Malicious</span>';
+                        } else if (value === '-1' || value === '0' || value === '0.0' || value === '-1.0') {
+                            safeCount++;
+                            row.classList.add('table-success');
+                            lastCell.innerHTML = '<span class="badge bg-success">Safe</span>';
+                        } else {
+                            // For any other values, consider as unknown or neutral
+                            row.classList.add('table-warning');
+                            lastCell.innerHTML = '<span class="badge bg-warning">Unknown</span>';
+                        }
+                    }
+                });
+                  // Don't update the counts here as they come from the server
+                // Just in case they weren't provided, use the calculated values
+                if (document.getElementById('safeCount').textContent === '0' && safeCount > 0) {
+                    document.getElementById('safeCount').textContent = safeCount;
+                }
+                if (document.getElementById('dangerCount').textContent === '0' && dangerCount > 0) {
+                    document.getElementById('dangerCount').textContent = dangerCount;
+                }
+                if (document.getElementById('totalCount').textContent === '0' && (safeCount + dangerCount) > 0) {
+                    document.getElementById('totalCount').textContent = safeCount + dangerCount;
                 }
             }
         });

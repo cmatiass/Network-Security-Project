@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make Prediction - Network Security Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a192f;
+            color: #e6f1ff;
+            padding-top: 60px;
+        }
+        .navbar {
+            background-color: #112240;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: #64ffda;
+        }
+        .card {
+            background-color: #112240;
+            border: 1px solid #233554;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #1d304d;
+            color: #64ffda;
+            font-weight: 600;
+            border-bottom: 1px solid #233554;
+        }
+        .btn-primary {
+            background-color: #64ffda;
+            border-color: #64ffda;
+            color: #0a192f;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: transparent;
+            color: #64ffda;
+            border-color: #64ffda;
+        }
+        .btn-outline-primary {
+            border-color: #64ffda;
+            color: #64ffda;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background-color: #64ffda;
+            color: #0a192f;
+        }
+        .hero-section {
+            padding: 60px 0;
+        }
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ccd6f6;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .footer {
+            background-color: #112240;
+            color: #8892b0;
+            padding: 30px 0;
+            margin-top: 60px;
+        }
+        .cyber-pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiPjwvcmVjdD4KPC9zdmc+');
+            z-index: -1;
+        }
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+            overflow: hidden;
+        }
+        .file-upload input[type=file] {
+            position: absolute;
+            font-size: 100px;
+            right: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .upload-box {
+            border: 2px dashed #64ffda;
+            border-radius: 10px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        .upload-box:hover, .upload-box.dragover {
+            background-color: #1d304d;
+        }
+        .upload-icon {
+            font-size: 3rem;
+            color: #64ffda;
+            margin-bottom: 1rem;
+        }
+        .upload-text {
+            color: #8892b0;
+            margin-bottom: 1rem;
+        }
+        .progress {
+            background-color: #233554;
+            height: 8px;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            background-color: #64ffda;
+        }
+        .result-item {
+            border-left: 3px solid #64ffda;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            background-color: #1d304d;
+            border-radius: 0 5px 5px 0;
+        }
+        .table {
+            color: #e6f1ff;
+            border-color: #233554;
+        }
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: #1d304d;
+        }
+        .table-striped > tbody > tr:nth-of-type(even) {
+            background-color: #112240;
+        }
+        .table thead th {
+            background-color: #233554;
+            color: #64ffda;
+            border-bottom: none;
+        }
+        .btn-sample {
+            margin-top: 10px;
+        }
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            border-width: 0.25rem;
+            color: #64ffda;
+        }
+        .feature-list {
+            columns: 2;
+            column-gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .feature-item {
+            break-inside: avoid;
+            margin-bottom: 0.5rem;
+        }
+        .feature-item i {
+            color: #64ffda;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-shield-alt me-2"></i>Network Security Analysis</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/train-model">Train Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/prediction">Make Prediction</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="cyber-pattern"></div>
+    
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title">Network Threat Prediction</h1>
+                    <p class="hero-subtitle">
+                        Upload your network data to analyze and detect potential security threats using our trained machine learning model.
+                        Our model processes multiple features to accurately identify malicious patterns.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-search me-2"></i>Make Prediction</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="modelNotTrained" class="alert alert-warning d-none">
+                            <i class="fas fa-exclamation-triangle me-2"></i> Model not trained yet! Please train the model first.
+                            <a href="/train-model" class="btn btn-primary btn-sm ms-2">Train Model</a>
+                        </div>
+                        
+                        <div id="predictionContainer">
+                            <h6>Upload Network Data for Analysis</h6>
+                              <p class="text-light mb-2">The model requires the following features for analysis:</p>
+                            <div class="bg-dark p-3 rounded mb-3" style="font-family: monospace; font-size: 0.85rem; overflow-x: auto; white-space: nowrap;">
+                                having_IP_Address, URL_Length, Shortining_Service, having_At_Symbol, double_slash_redirecting, Prefix_Suffix, having_Sub_Domain, SSLfinal_State, Domain_registeration_length, Favicon, port, HTTPS_token, Request_URL, URL_of_Anchor, Links_in_tags, SFH, Submitting_to_email, Abnormal_URL, Redirect, on_mouseover, RightClick, popUpWidnow, Iframe, age_of_domain, DNSRecord, web_traffic, Page_Rank, Google_Index, Links_pointing_to_page, Statistical_report
+                            </div>
+                            <p class="text-light opacity-75 mb-4">These features are used to identify patterns and characteristics commonly associated with malicious websites and phishing attempts.</p>
+                              <form id="predictionForm" enctype="multipart/form-data">
+                                <div class="upload-box" id="drop-area">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-file-upload"></i>
+                                    </div>                                    <div class="upload-text">
+                                        <strong>Upload CSV File</strong>
+                                        <p>Drag and drop your file here or click to select</p>
+                                    </div>
+                                    <div class="file-upload">                                        <input type="file" id="fileInput" name="file" accept=".csv">
+                                        <button type="button" class="btn btn-outline-primary">Select file</button>
+                                    </div>
+                                    <div id="file-name" class="mt-2 text-light"></div>
+                                      <div class="alert alert-success mt-4 text-center">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <i class="fas fa-lightbulb mb-2" style="font-size: 1.5rem;"></i>
+                                            <div>
+                                                <strong>Tip!</strong>
+                                                <p class="mb-2 mt-1">You can use the <code>test.csv</code> file included in this project to test the model.</p>
+                                                <button type="button" id="useSampleData" class="btn btn-success btn-sm">
+                                                    <i class="fas fa-play-circle me-1"></i> Use test.csv
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                      <div class="alert alert-info mt-3">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>CSV Format:</strong> Make sure your CSV file has the correct columns.
+                                        The file must contain all required columns (having_IP_Address, URL_Length, etc.).
+                                        <a href="#" id="formatDetailsLink" class="alert-link">View format details</a>
+                                    </div>
+                                </div>
+                                  <!-- Modal to display format details -->                                <div class="modal fade" id="formatDetailsModal" tabindex="-1" aria-labelledby="formatDetailsModalLabel" aria-hidden="true">
+                                  <div class="modal-dialog modal-lg">
+                                    <div class="modal-content bg-dark text-light">
+                                      <div class="modal-header border-secondary">
+                                        <h5 class="modal-title" id="formatDetailsModalLabel">CSV File Format</h5>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                      </div>
+                                      <div class="modal-body">
+                                        <div class="alert alert-success mb-4">
+                                          <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-file-csv me-2" style="font-size: 1.2rem;"></i>
+                                            <strong>Sample file available:</strong>
+                                          </div>
+                                          <p>To facilitate testing, you can use the <code>test.csv</code> file located in the <code>valid_data</code> folder of the project.</p>
+                                          <button type="button" id="useSampleDataModal" class="btn btn-success btn-sm" data-bs-dismiss="modal">
+                                            <i class="fas fa-play-circle me-1"></i> Use sample file
+                                          </button>
+                                        </div>
+                                          <h6><i class="fas fa-table me-2"></i>CSV File Structure</h6>
+                                        <p>The file must contain the following columns:</p>
+                                        <code class="d-block bg-black p-3 rounded mb-3" style="font-size: 0.8rem; overflow-x: auto; white-space: nowrap;">
+                                          having_IP_Address,URL_Length,Shortining_Service,having_At_Symbol,double_slash_redirecting,Prefix_Suffix,having_Sub_Domain,SSLfinal_State,Domain_registeration_length,Favicon,port,HTTPS_token,Request_URL,URL_of_Anchor,Links_in_tags,SFH,Submitting_to_email,Abnormal_URL,Redirect,on_mouseover,RightClick,popUpWidnow,Iframe,age_of_domain,DNSRecord,web_traffic,Page_Rank,Google_Index,Links_pointing_to_page,Statistical_report
+                                        </code>
+                                        <p>Each row must contain numerical values corresponding to website features (typically -1, 0, or 1).</p>
+                                        
+                                        <h6 class="mt-4"><i class="fas fa-eye me-2"></i>Data Example</h6>
+                                        <p>This is how the first rows of the test.csv file look like:</p>
+                                        <pre class="bg-black p-3 rounded" style="font-size: 0.8rem; overflow-x: auto;">
+1,-1,1,1,1,-1,1,1,1,1,1,-1,-1,1,1,0,1,1,0,1,1,1,1,1,1,-1,-1,1,1,1
+-1,-1,-1,1,-1,1,1,1,-1,1,1,-1,1,1,0,1,1,-1,0,1,1,1,1,-1,-1,1,1,-1,1,1
+                                        </pre>
+                                          <div class="alert alert-warning mt-4">
+                                          <i class="fas fa-exclamation-triangle me-2"></i>
+                                          <strong>Important:</strong> Make sure your CSV file is correctly formatted and contains all the necessary columns for the model to make accurate predictions.
+                                        </div>
+                                      </div>
+                                      <div class="modal-footer border-secondary">
+                                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Got it</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>                                <div class="text-center mt-4">
+                                    <button type="submit" id="predictBtn" class="btn btn-primary btn-lg px-5">
+                                        <i class="fas fa-search me-1"></i><i class="fas fa-shield-alt me-2"></i> Analyze data and predict
+                                    </button>
+                                    <p class="text-light mt-2"><small>Press the button to process data and get results</small></p>
+                                </div>
+                            </form>
+                              <div id="loadingSpinner" class="text-center my-4 d-none">
+                                <div class="spinner-border loading-spinner" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <div class="mt-3">Analyzing network data...</div>
+                            </div>
+                            
+                            <div id="errorMessage" class="alert alert-danger my-4 d-none">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                <span id="errorText">An error occurred</span>
+                            </div>
+                              <div id="predictionResults" class="my-4 d-none">
+                                <h5 class="text-center mb-4"></h5>
+                                <div id="resultsContainer"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>© Network Security Project | All Rights Reserved</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="https://github.com/cmatiass" target="_blank" class="text-light me-3">
+                        <i class="fab fa-github me-1"></i>GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/carlosmatiassaez/" target="_blank" class="text-light">
+                        <i class="fab fa-linkedin me-1"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('fileInput');
+            const fileName = document.getElementById('file-name');
+            const dropArea = document.getElementById('drop-area');
+            const predictionForm = document.getElementById('predictionForm');            const loadingSpinner = document.getElementById('loadingSpinner');
+            const predictionResults = document.getElementById('predictionResults');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const useSampleData = document.getElementById('useSampleData');
+            const modelNotTrained = document.getElementById('modelNotTrained');            const formatDetailsLink = document.getElementById('formatDetailsLink');
+            const formatDetailsModal = new bootstrap.Modal(document.getElementById('formatDetailsModal'));
+            const useSampleDataModal = document.getElementById('useSampleDataModal');
+              // Check if model is trained
+            fetch('/check-model')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.trained) {
+                        modelNotTrained.classList.remove('d-none');
+                        document.getElementById('predictBtn').disabled = true;
+                        document.getElementById('useSampleData').disabled = true;
+                    }
+                })
+                .catch(error => console.error('Error checking model status:', error));
+                
+            // Manejador de eventos para el enlace de detalles del formato
+            formatDetailsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                formatDetailsModal.show();
+            });
+            
+            // File input change event
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    fileName.textContent = this.files[0].name;
+                }
+            });
+            
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, preventDefaults, false);
+            });
+            
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropArea.addEventListener(eventName, highlight, false);
+            });
+            
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropArea.addEventListener(eventName, unhighlight, false);
+            });
+            
+            function highlight() {
+                dropArea.classList.add('dragover');
+            }
+            
+            function unhighlight() {
+                dropArea.classList.remove('dragover');
+            }
+            
+            dropArea.addEventListener('drop', handleDrop, false);
+            
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files && files.length > 0) {
+                    fileInput.files = files;
+                    fileName.textContent = files[0].name;
+                }
+            }              // Function to use sample data
+            function useSampleDataHandler() {
+                // Simulate using test.csv
+                fileName.textContent = 'test.csv (Sample data)';
+                
+                // Visual feedback
+                const btn = document.getElementById('useSampleData');
+                btn.innerHTML = '<i class="fas fa-check me-1"></i> test.csv selected';
+                btn.classList.remove('btn-success');
+                btn.classList.add('btn-outline-success');
+                
+                // Set a custom property to indicate we're using sample data
+                fileInput.dataset.useSample = 'true';
+                
+                // Scroll to the predict button
+                document.getElementById('predictBtn').scrollIntoView({behavior: 'smooth'});
+            }
+            
+            // Sample data button in main form
+            useSampleData.addEventListener('click', useSampleDataHandler);
+            
+            // Sample data button in modal
+            useSampleDataModal.addEventListener('click', function() {
+                useSampleDataHandler();
+                formatDetailsModal.hide();
+            });
+            
+            // Form submission
+            predictionForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                  // Show loading spinner and hide any previous errors/results
+                loadingSpinner.classList.remove('d-none');
+                predictionResults.classList.add('d-none');
+                document.getElementById('errorMessage').classList.add('d-none');
+                
+                // Create form data
+                const formData = new FormData();
+                
+                // Check if we're using sample data
+                if (fileInput.dataset.useSample === 'true') {
+                    // Create a special request to use the test.csv file
+                    fetch('/predict-sample')
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            loadingSpinner.classList.add('d-none');
+                            predictionResults.classList.remove('d-none');
+                            resultsContainer.innerHTML = html;
+                            // Reset the sample data flag
+                            delete fileInput.dataset.useSample;
+                        })                        .catch(error => {
+                            const errorMessage = document.getElementById('errorMessage');
+                            const errorText = document.getElementById('errorText');
+                            errorText.textContent = 'Error: ' + error.message;
+                            errorMessage.classList.remove('d-none');
+                            loadingSpinner.classList.add('d-none');
+                        });} else if (fileInput.files && fileInput.files[0]) {
+                    // Use the uploaded file
+                    formData.append('file', fileInput.files[0]);
+                    
+                    // Log the file details to help with debugging
+                    console.log('Uploading file:', fileInput.files[0].name, 'Size:', fileInput.files[0].size);
+                    
+                    // Validate file extension
+                    const fileName = fileInput.files[0].name.toLowerCase();
+                    if (!fileName.endsWith('.csv')) {
+                        const errorMessage = document.getElementById('errorMessage');
+                        const errorText = document.getElementById('errorText');                        errorText.textContent = 'Error: Only CSV files are allowed. Please upload a file with .csv extension';
+                                        errorMessage.classList.remove('d-none');
+                                        loadingSpinner.classList.add('d-none');
+                        return;
+                    }
+                    
+                    fetch('/predict', {
+                        method: 'POST',
+                        body: formData,
+                        // Don't set Content-Type header - the browser will set it correctly with the boundary for multipart/form-data
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            return response.json().catch(e => {
+                                // Si no se puede parsear como JSON, intentar con texto
+                                return response.text().then(text => {
+                                    try {
+                                        // Intentar parsear el texto como JSON
+                                        return JSON.parse(text);
+                                    } catch (e) {
+                                        // Si no es JSON, devolver un objeto con el texto
+                                        return { error: text };
+                                    }
+                                });
+                            }).then(errorData => {
+                                console.error('Error response:', errorData);                                let errorMsg = 'Prediction error';
+                                
+                                if (errorData.error) {
+                                    errorMsg = errorData.error;
+                                }
+                                
+                                throw new Error(errorMsg);
+                            });
+                        }
+                        return response.text();
+                    })
+                    .then(html => {
+                        loadingSpinner.classList.add('d-none');
+                        predictionResults.classList.remove('d-none');
+                        resultsContainer.innerHTML = html;
+                    })                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        const errorMessage = document.getElementById('errorMessage');
+                        const errorText = document.getElementById('errorText');
+                        errorText.textContent = 'Error: ' + error.message;
+                        errorMessage.classList.remove('d-none');
+                        loadingSpinner.classList.add('d-none');
+                    });                } else {
+                    const errorMessage = document.getElementById('errorMessage');
+                    const errorText = document.getElementById('errorText');
+                    errorText.textContent = 'Please select a file or use sample data';
+                    errorMessage.classList.remove('d-none');
+                    loadingSpinner.classList.add('d-none');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

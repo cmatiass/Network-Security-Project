@@ -1,4 +1,4 @@
-# Network Security Project: Phishing Detection System 🛡️
+# MLOps: Network Security Project: Phishing Detection System 🛡️
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0-green)
@@ -11,6 +11,7 @@
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Frontend Interface](#frontend-interface)
 - [MLOps Pipeline](#mlops-pipeline)
 - [API Endpoints](#api-endpoints)
 - [Deployment on AWS](#deployment-on-aws)
@@ -45,11 +46,21 @@ Network-Security-Project/
 ├── push_data.py               # Script to push data to MongoDB
 ├── requirements.txt           # Project dependencies
 ├── setup.py                   # Package setup configuration
+├── Artifacts/                 # Saved data artifacts
 ├── data_schema/               # Data validation schemas
 ├── final_model/               # Saved model artifacts
 ├── Network_Data/              # Raw dataset directory
 ├── prediction_output/         # Directory for prediction results
 ├── templates/                 # HTML templates for the web interface
+│   ├── index.html             # Landing page
+│   ├── prediction.html        # Prediction interface
+│   ├── train_model.html       # Model training interface
+│   ├── training_complete.html # Training success page
+│   └── table.html             # Results display page
+├── static/                    # Static assets for the frontend
+│   ├── css/                   # CSS stylesheets
+│   ├── js/                    # JavaScript files
+│   └── img/                   # Images and icons
 └── networksecurity/          # Core package
     ├── components/            # Pipeline components
     │   ├── data_ingestion.py  # Data loading from MongoDB
@@ -71,6 +82,8 @@ Network-Security-Project/
 - 📊 Data validation with schema enforcement
 - 🧠 Machine learning model training with hyperparameter tuning
 - 🚀 FastAPI-based REST API for real-time predictions
+- 🎨 Modern, responsive web interface with cybersecurity aesthetics
+- 📱 User-friendly UI for model training and predictions
 - 📦 Containerization with Docker
 - ☁️ AWS deployment ready
 - 🔁 CI/CD with GitHub Actions for automated testing and deployment
@@ -102,30 +115,49 @@ Network-Security-Project/
 
 ## 🚀 Usage
 
-### Running the Training Pipeline
+### Running the Application
 
-To train the model with the complete pipeline:
+1. After installation, start the FastAPI application:
+   ```
+   python app.py
+   ```
 
-```python
-python main.py
-```
+2. The application will start on `http://localhost:8000`
 
-This will execute:
-- Data ingestion from MongoDB
-- Data validation against schema
-- Data transformation and preprocessing
-- Model training and evaluation
-- Model saving
+3. Open your web browser and navigate to this address
+
+4. You'll see the main dashboard with options to:
+   - Learn about the project
+   - Train a new model
+   - Make predictions on network data
+
+### Training a Model
+
+1. Navigate to the "Train Model" page
+2. Click the "Start Training" button
+3. The system will display real-time progress of the training pipeline
+4. Once complete, you'll see performance metrics and can proceed to making predictions
 
 ### Making Predictions
 
-To run the FastAPI application for predictions:
+1. Navigate to the "Make Prediction" page
+2. Upload your network data in CSV format, or use the provided sample data
+3. Click "Analyze Network Data"
+4. View the detailed results showing:
+   - Classification results (safe or malicious)
+   - Confidence scores
+   - Feature importance
+   - Summary statistics
 
-```python
-uvicorn app:app --reload
-```
+### Sample Data
 
-Visit `http://localhost:8000/docs` to access the Swagger UI for API documentation.
+The project includes a `test.csv` file in the `valid_data` directory that can be used to test the prediction functionality. This sample data contains various network security features like:
+
+- IP address characteristics
+- URL properties
+- Domain registration information
+- SSL certificate status
+- HTTP/HTTPS token information
 
 ## 🔄 MLOps Pipeline
 
@@ -159,11 +191,45 @@ The project implements a comprehensive MLOps pipeline:
 
 ## 🌐 API Endpoints
 
-The application provides the following endpoints:
+The application provides several API endpoints for both frontend functionality and direct programmatic access:
 
-- `GET /`: Redirects to API documentation
-- `GET /train`: Triggers the training pipeline
-- `POST /predict`: Accepts CSV files for batch prediction
+### Frontend Pages
+- `GET /`: Main landing page with project overview
+- `GET /train-model`: Model training interface
+- `GET /prediction`: Prediction interface for data uploads
+- `GET /training-complete`: Training completion confirmation page
+
+### API Functionality
+- `POST /train-status`: Initiates model training process
+- `POST /finalize-training`: Finalizes and persists the trained model
+- `GET /check-model`: Checks if a trained model exists and its status
+- `POST /predict`: Makes predictions on uploaded data
+- `GET /predict-sample`: Makes predictions using the sample test dataset
+
+### Example API Usage:
+
+**Check if model exists:**
+```python
+import requests
+response = requests.get("http://localhost:8000/check-model")
+print(response.json())
+# {"trained": true, "status": "completed"}
+```
+
+**Upload data for prediction:**
+```python
+import requests
+files = {"file": open("network_data.csv", "rb")}
+response = requests.post("http://localhost:8000/predict", files=files)
+# Returns HTML with prediction results
+```
+
+**Use sample data for prediction:**
+```python
+import requests
+response = requests.get("http://localhost:8000/predict-sample")
+# Returns HTML with prediction results using test.csv
+```
 
 ## ☁️ Deployment on AWS
 

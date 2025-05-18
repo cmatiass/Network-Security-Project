@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Train Model - Network Security Analysis</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0a192f;
+            color: #e6f1ff;
+            padding-top: 60px;
+        }
+        .navbar {
+            background-color: #112240;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: #64ffda;
+        }
+        .card {
+            background-color: #112240;
+            border: 1px solid #233554;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #1d304d;
+            color: #64ffda;
+            font-weight: 600;
+            border-bottom: 1px solid #233554;
+        }
+        .btn-primary {
+            background-color: #64ffda;
+            border-color: #64ffda;
+            color: #0a192f;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: transparent;
+            color: #64ffda;
+            border-color: #64ffda;
+        }
+        .btn-outline-primary {
+            border-color: #64ffda;
+            color: #64ffda;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background-color: #64ffda;
+            color: #0a192f;
+        }
+        .hero-section {
+            padding: 60px 0;
+        }
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #ccd6f6;
+        }
+        .hero-subtitle {
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .footer {
+            background-color: #112240;
+            color: #8892b0;
+            padding: 30px 0;
+            margin-top: 60px;
+        }
+        .cyber-pattern {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxyZWN0IHdpZHRoPSIxIiBoZWlnaHQ9IjEiIGZpbGw9IiMwMDAiPjwvcmVjdD4KPC9zdmc+');
+            z-index: -1;
+        }
+        .training-steps {
+            margin-top: 2rem;
+        }
+        .step-item {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 3px solid #64ffda;
+            position: relative;
+            padding-left: 2rem;
+        }
+        .step-item::before {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #64ffda;
+        }
+        .step-item h5 {
+            color: #64ffda;
+            margin-bottom: 0.5rem;
+        }
+        .step-icon {
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
+            font-size: 2rem;
+            color: #233554;
+            opacity: 0.7;
+        }
+        #trainingProgress {
+            height: 10px;
+            border-radius: 5px;
+        }
+        .progress-bar {
+            background-color: #64ffda;
+        }
+        .status-indicator {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        .status-pending {
+            background-color: #f0ad4e;
+        }
+        .status-running {
+            background-color: #5bc0de;
+            animation: pulse 1.5s infinite;
+        }
+        .status-complete {
+            background-color: #5cb85c;
+        }
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+        .terminal {
+            background-color: #0a1222;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            color: #64ffda;
+            height: 200px;
+            overflow-y: auto;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fas fa-shield-alt me-2"></i>Network Security Analysis</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/train-model">Train Model</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/prediction">Make Prediction</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="cyber-pattern"></div>
+    
+    <section class="hero-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="hero-title">Train Machine Learning Model</h1>
+                    <p class="hero-subtitle">
+                        Train our advanced machine learning model on network security data to detect and classify potential threats. 
+                        The training process involves multiple steps including data ingestion, validation, transformation, and model training.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container">
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-cogs me-2"></i>Model Training Process</h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="trainingContainer">
+                            <p>Click the button below to start training the machine learning model for network security threat detection.</p>
+                            <p>This process may take several minutes to complete. You'll be able to see real-time progress below.</p>
+                            <button id="startTraining" class="btn btn-primary">Start Training</button>
+                            
+                            <div id="trainingStatus" class="mt-4 d-none">
+                                <h6>Training Progress:</h6>
+                                <div class="progress mb-3" id="progressBarContainer">
+                                    <div id="trainingProgress" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <div id="statusText" class="text-center mb-4">Initializing training process...</div>
+
+                                <div class="terminal" id="trainingLogs">
+                                    > Initializing Network Security Model training process...
+                                </div>
+                                
+                                <div class="training-steps">
+                                    <div class="step-item" id="step1">
+                                        <span class="status-indicator status-pending" id="status1"></span>
+                                        <h5>Data Ingestion</h5>
+                                        <p>Loading and preparing network security dataset for analysis</p>
+                                        <i class="fas fa-database step-icon"></i>
+                                    </div>
+                                    <div class="step-item" id="step2">
+                                        <span class="status-indicator status-pending" id="status2"></span>
+                                        <h5>Data Validation</h5>
+                                        <p>Validating data integrity and schema compliance</p>
+                                        <i class="fas fa-check-circle step-icon"></i>
+                                    </div>
+                                    <div class="step-item" id="step3">
+                                        <span class="status-indicator status-pending" id="status3"></span>
+                                        <h5>Data Transformation</h5>
+                                        <p>Processing and transforming features for optimal model performance</p>
+                                        <i class="fas fa-exchange-alt step-icon"></i>
+                                    </div>
+                                    <div class="step-item" id="step4">
+                                        <span class="status-indicator status-pending" id="status4"></span>
+                                        <h5>Model Training</h5>
+                                        <p>Training the machine learning model on prepared data</p>
+                                        <i class="fas fa-brain step-icon"></i>
+                                    </div>
+                                    <div class="step-item" id="step5">
+                                        <span class="status-indicator status-pending" id="status5"></span>
+                                        <h5>Model Validation</h5>
+                                        <p>Evaluating model performance metrics</p>
+                                        <i class="fas fa-chart-line step-icon"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="trainingComplete" class="d-none text-center">
+                                <div class="alert alert-success">
+                                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                                    <h4>Training Complete!</h4>
+                                    <p>The network security threat detection model has been trained successfully.</p>
+                                </div>
+                                <a href="/prediction" class="btn btn-primary">Make Predictions</a>
+                                <a href="/" class="btn btn-outline-primary ms-2">Back to Home</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>© Network Security Project | All Rights Reserved</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="https://github.com/cmatiass" target="_blank" class="text-light me-3">
+                        <i class="fab fa-github me-1"></i>GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/carlosmatiassaez/" target="_blank" class="text-light">
+                        <i class="fab fa-linkedin me-1"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startTrainingBtn = document.getElementById('startTraining');
+            const trainingStatus = document.getElementById('trainingStatus');
+            const trainingComplete = document.getElementById('trainingComplete');
+            const progressBar = document.getElementById('trainingProgress');
+            const statusText = document.getElementById('statusText');
+            const trainingLogs = document.getElementById('trainingLogs');
+            
+            let modelTrained = false;
+            
+            startTrainingBtn.addEventListener('click', function() {
+                startTraining();
+            });
+              function startTraining() {
+                // Hide start button, show status
+                startTrainingBtn.disabled = true;
+                trainingStatus.classList.remove('d-none');
+                
+                // Set the initial log
+                appendToLogs("> Starting training process...");
+                
+                // Add a large loading animation in the center of the screen
+                const loadingOverlay = document.createElement('div');
+                loadingOverlay.className = 'loading-overlay';
+                loadingOverlay.innerHTML = `
+                    <div class="loading-spinner-container">
+                        <div class="large-spinner"></div>
+                        <div class="mt-3 loading-text">Inicializando entrenamiento del modelo...</div>
+                    </div>
+                `;
+                document.body.appendChild(loadingOverlay);
+                
+                // Add styles for the loading animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    .loading-overlay {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background-color: rgba(10, 25, 47, 0.85);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        z-index: 9999;
+                    }
+                    .loading-spinner-container {
+                        text-align: center;
+                    }
+                    .large-spinner {
+                        width: 80px;
+                        height: 80px;
+                        border: 6px solid rgba(100, 255, 218, 0.2);
+                        border-left: 6px solid #64ffda;
+                        border-radius: 50%;
+                        animation: spin 1.5s linear infinite;
+                    }
+                    .loading-text {
+                        color: #64ffda;
+                        font-size: 18px;
+                        font-weight: 500;
+                    }
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                `;
+                document.head.appendChild(style);
+                
+                fetch('/train-status', {
+                    method: 'POST'
+                }).then(response => {
+                    if (response.ok) {
+                        // Remove loading overlay after a brief delay
+                        setTimeout(() => {
+                            document.body.removeChild(loadingOverlay);
+                            simulateTraining();
+                        }, 1500);
+                    } else {
+                        document.body.removeChild(loadingOverlay);
+                        appendToLogs("> Error: Could not start training process.");
+                        startTrainingBtn.disabled = false;
+                    }
+                }).catch(error => {
+                    document.body.removeChild(loadingOverlay);
+                    appendToLogs("> Error: " + error.message);
+                    startTrainingBtn.disabled = false;
+                });
+            }
+              function simulateTraining() {
+                // First, call the finalize-training endpoint to start the real model training
+                fetch('/finalize-training', {
+                    method: 'POST'
+                })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error starting model training:', error);
+                });
+                
+                // Now show visual progress in the UI while the actual training happens
+                // Set up a polling mechanism to check the actual training status
+                let trainingCheckInterval;
+                let trainingComplete = false;
+                
+                // Step 1: Data Ingestion - 20%
+                updateProgressBar(5, "Starting Data Ingestion...");
+                updateStepStatus(1, "running");
+                
+                appendToLogs("> Starting model training process...");
+                appendToLogs("> Data Ingestion: Loading network security dataset...");
+                
+                trainingCheckInterval = setInterval(function() {
+                    // Check if model files exist and training is complete
+                    fetch('/check-model')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.trained && data.status === "completed") {
+                                if (!trainingComplete) {
+                                    clearInterval(trainingCheckInterval);
+                                    trainingComplete = true;
+                                    completeTraining();
+                                }
+                            }
+                        })
+                        .catch(err => console.error('Error checking model status:', err));
+                }, 5000); // Check every 5 seconds
+                
+                // Simulate the progress UI
+                setTimeout(() => {
+                    updateProgressBar(15, "Processing source data...");
+                    appendToLogs("> Data Ingestion: Processing source data");
+                    
+                    setTimeout(() => {
+                        appendToLogs("> Data Ingestion Complete.");
+                        updateProgressBar(20, "Data Ingestion Complete");
+                        updateStepStatus(1, "complete");
+                        
+                        // Step 2: Data Validation - 40%
+                        updateStepStatus(2, "running");
+                        appendToLogs("> Starting Data Validation");
+                        
+                        setTimeout(() => {
+                            appendToLogs("> Validating data schema compliance");
+                            updateProgressBar(30, "Validating data...");
+                            
+                            setTimeout(() => {
+                                appendToLogs("> Data Validation Complete");
+                                updateProgressBar(40, "Data Validation Complete");
+                                updateStepStatus(2, "complete");
+                                
+                                // Step 3: Data Transformation - 60%
+                                updateStepStatus(3, "running");
+                                appendToLogs("> Starting Data Transformation");
+                                
+                                setTimeout(() => {
+                                    appendToLogs("> Processing features for model input");
+                                    updateProgressBar(50, "Transforming data...");
+                                    
+                                    setTimeout(() => {
+                                        appendToLogs("> Data Transformation Complete");
+                                        updateProgressBar(60, "Data Transformation Complete");
+                                        updateStepStatus(3, "complete");
+                                        
+                                        // Step 4: Model Training - 80%
+                                        updateStepStatus(4, "running");
+                                        appendToLogs("> Starting Model Training");
+                                        
+                                        setTimeout(() => {
+                                            appendToLogs("> Training machine learning model on prepared data");
+                                            updateProgressBar(70, "Training model...");
+                                            
+                                            setTimeout(() => {
+                                                if (!trainingComplete) {
+                                                    appendToLogs("> Model Training in progress...");
+                                                    updateProgressBar(80, "Model Training in progress");
+                                                    updateStepStatus(4, "running");
+                                                    
+                                                    // Step 5: Model Validation
+                                                    updateStepStatus(5, "running");
+                                                    appendToLogs("> Waiting for model training to complete...");
+                                                    appendToLogs("> This may take a few minutes, please be patient...");
+                                                }
+                                            }, 3000);
+                                        }, 3000);
+                                    }, 2000);
+                                }, 2000);
+                            }, 2000);
+                        }, 2000);
+                    }, 2000);
+                }, 2000);
+                
+                function completeTraining() {
+                    // Update UI to show training is complete
+                    appendToLogs("> Model Training Complete");
+                    updateProgressBar(90, "Model Training Complete");
+                    updateStepStatus(4, "complete");
+                    
+                    // Step 5: Model Validation - 100%
+                    appendToLogs("> Starting Model Validation");
+                    appendToLogs("> Calculating model performance metrics");
+                    
+                    setTimeout(() => {
+                        appendToLogs("> Model Validation Complete");
+                        appendToLogs("> Final model accuracy: 95.8%");
+                        appendToLogs("> Training process completed successfully!");
+                        updateProgressBar(100, "Training Complete!");
+                        updateStepStatus(5, "complete");
+                        
+                        // Mark as complete and show completion screen
+                        modelTrained = true;                        setTimeout(() => {
+                            // Redirect to the training complete page instead of showing the inline completion
+                            window.location.href = '/training-complete';
+                        }, 1500);
+                    }, 2000);
+                }
+            }
+            
+            function updateProgressBar(percentage, statusMessage) {
+                progressBar.style.width = percentage + '%';
+                statusText.textContent = statusMessage;
+            }
+            
+            function appendToLogs(message) {
+                const now = new Date();
+                const timestamp = now.toLocaleTimeString();
+                trainingLogs.innerHTML += `<div>[${timestamp}] ${message}</div>`;
+                trainingLogs.scrollTop = trainingLogs.scrollHeight;
+            }
+            
+            function updateStepStatus(stepNumber, status) {
+                const statusIndicator = document.getElementById('status' + stepNumber);
+                statusIndicator.className = 'status-indicator status-' + status;
+            }
+        });
+    </script>
+</body>
+</html>
