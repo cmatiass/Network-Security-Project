@@ -46,11 +46,27 @@ Network-Security-Project/
 ├── push_data.py               # Script to push data to MongoDB
 ├── requirements.txt           # Project dependencies
 ├── setup.py                   # Package setup configuration
-├── Artifacts/                 # Saved data artifacts
+├── training_status.json       # Training process status tracking
+├── test_mongodb.py            # MongoDB connection test script
+├── Artifacts/                 # Saved data artifacts by timestamp
+│   └── 05_18_2025_21_05_00/  # Example artifact directory
+│       ├── data_ingestion/    # Data fetching artifacts
+│       ├── data_transformation/ # Preprocessing artifacts
+│       ├── data_validation/   # Validation reports
+│       └── model_trainer/     # Model artifacts
+├── daily_logs/                # Daily operation logs
+├── logs/                      # Detailed timestamped log files
 ├── data_schema/               # Data validation schemas
-├── final_model/               # Saved model artifacts
+│   └── schema.yaml            # Schema definition file
+├── final_model/               # Production-ready model
+│   ├── model.pkl              # Trained model
+│   └── preprocessor.pkl       # Data preprocessor
 ├── Network_Data/              # Raw dataset directory
+│   └── phisingData.csv        # Phishing website dataset
 ├── prediction_output/         # Directory for prediction results
+│   └── output.csv             # Example prediction output
+├── valid_data/                # Validated data for testing
+│   └── test.csv               # Test dataset
 ├── templates/                 # HTML templates for the web interface
 │   ├── index.html             # Landing page
 │   ├── prediction.html        # Prediction interface
@@ -61,13 +77,17 @@ Network-Security-Project/
 │   ├── css/                   # CSS stylesheets
 │   ├── js/                    # JavaScript files
 │   └── img/                   # Images and icons
-└── networksecurity/          # Core package
+└── networksecurity/           # Core package
+    ├── __init__.py            # Package initialization
     ├── components/            # Pipeline components
+    │   ├── __init__.py        # Component initialization
     │   ├── data_ingestion.py  # Data loading from MongoDB
     │   ├── data_validation.py # Schema validation
     │   ├── data_transformation.py # Feature engineering
     │   └── model_trainer.py   # Model training and evaluation
     ├── cloud/                 # Cloud integration (AWS S3)
+    │   ├── __init__.py        # Cloud module initialization
+    │   └── s3_syncer.py       # AWS S3 synchronization
     ├── constant/              # Project constants and configurations
     ├── entity/                # Data classes and entities
     ├── exception/             # Custom exception handling
