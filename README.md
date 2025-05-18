@@ -7,7 +7,9 @@
 
 ## 🚀 Live Demo
 
-Try out the live demo of the project: [Network Security Project Demo](https://network-security-project.onrender.com) 
+Try out the live demo of the project:
+[Network Security Project Demo](https://network-security-project.onrender.com) 
+
 (Please note that the application may take a few minutes to start up on first access)
 
 ![image](https://github.com/user-attachments/assets/2624063b-bd46-4757-8d80-0f014ae290f9)
