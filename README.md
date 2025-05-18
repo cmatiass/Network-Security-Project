@@ -5,7 +5,16 @@
 ![MLOps](https://img.shields.io/badge/MLOps-Pipeline-orange)
 ![AWS](https://img.shields.io/badge/AWS-Cloud-yellow)
 
+## 🚀 Live Demo
+
+Try out the live demo of the project: [Network Security Project Demo](https://network-security-project.onrender.com) 
+(Please note that the application may take a few minutes to start up on first access)
+
+![Network Security Demo](https://raw.githubusercontent.com/cmatiass/Network-Security-Project/main/static/img/demo-screenshot.png)
+
+
 ## 📋 Table of Contents
+- [Live Demo](#-live-demo)
 - [Project Overview](#project-overview)
 - [Project Structure](#project-structure)
 - [Features](#features)
