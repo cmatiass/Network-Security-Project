@@ -10,7 +10,8 @@
 Try out the live demo of the project: [Network Security Project Demo](https://network-security-project.onrender.com) 
 (Please note that the application may take a few minutes to start up on first access)
 
-![Network Security Demo](https://raw.githubusercontent.com/cmatiass/Network-Security-Project/main/static/img/demo-screenshot.png)
+![image](https://github.com/user-attachments/assets/2624063b-bd46-4757-8d80-0f014ae290f9)
+
 
 
 ## 📋 Table of Contents
