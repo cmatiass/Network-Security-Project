@@ -45,11 +45,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Create required directories if they don't exist
+os.makedirs("prediction_output", exist_ok=True)
+os.makedirs("static/css", exist_ok=True)
+os.makedirs("static/img", exist_ok=True)
+os.makedirs("static/js", exist_ok=True)
+
 # Mount static files directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# Create prediction_output directory if it doesn't exist
-os.makedirs("prediction_output", exist_ok=True)
 
 # Setup templates
 from fastapi.templating import Jinja2Templates
